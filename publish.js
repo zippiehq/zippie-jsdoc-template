@@ -8,6 +8,7 @@ var logger = require('jsdoc/util/logger')
 var path = require('jsdoc/path')
 var taffy = require('taffydb').taffy
 var template = require('jsdoc/template')
+var json = require('../../package.json');
 var util = require('util')
 const { getParser } = require('jsdoc/util/markdown')
 
@@ -727,7 +728,7 @@ exports.publish = function (taffyData, opts, tutorials) {
   files = find({ kind: 'file' })
   packages = find({ kind: 'package' })
 
-  generate('', '',
+  generate(json.version, '',
     packages.concat(
       [{
         kind: 'mainpage',
