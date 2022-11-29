@@ -8,7 +8,7 @@ var logger = require('jsdoc/util/logger')
 var path = require('jsdoc/path')
 var taffy = require('taffydb').taffy
 var template = require('jsdoc/template')
-var json = require('../../package.json');
+var packageVersion = require('../../package.json')
 var util = require('util')
 const { getParser } = require('jsdoc/util/markdown')
 
@@ -446,7 +446,8 @@ function buildGroupNav(members, title) {
  */
 function buildNav(members, navTypes = null, betterDocs) {
   const href = betterDocs.landing ? 'docs.html' : 'index.html'
-  var nav = navTypes ? '' : `<h2><a href="${href}">Documentation</a></h2>`
+  var nav = navTypes ? '' : '<h3>' + "Zippie DID " + packageVersion.version + '</h3>'
+
 
   var categorised = {}
   var rootScope = {}
@@ -728,7 +729,7 @@ exports.publish = function (taffyData, opts, tutorials) {
   files = find({ kind: 'file' })
   packages = find({ kind: 'package' })
 
-  generate(json.version, '',
+  generate('', packageVersion.version,
     packages.concat(
       [{
         kind: 'mainpage',
