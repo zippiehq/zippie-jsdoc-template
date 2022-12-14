@@ -1,8 +1,8 @@
 {
-  "name": "better-docs",
-  "version": "2.7.2",
+  "name": "@zippie/jsdoc-template",
+  "version": "1.0.0",
   "description": "JSdoc theme",
-  "repository": "github:SoftwareBrothers/better-docs",
+  "repository": "github:zippiehq/zippie-jsdoc-template",
   "main": "publish.js",
   "scripts": {
     "gulp": "./node_modules/.bin/gulp",
