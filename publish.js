@@ -8,11 +8,11 @@ var logger = require('jsdoc/util/logger')
 var path = require('jsdoc/path')
 var taffy = require('taffydb').taffy
 var template = require('jsdoc/template')
-var packageVersion = require('../../package.json')
 var util = require('util')
 const { getParser } = require('jsdoc/util/markdown')
 
 var bundler = require('./bundler')
+const { readFileSync } = require('fs')
 const markdownParser = getParser()
 
 var htmlsafe = helper.htmlsafe
@@ -444,9 +444,9 @@ function buildGroupNav(members, title) {
  * @param {array<object>} members.interfaces
  * @return {string} The HTML for the navigation sidebar.
  */
-function buildNav(members, navTypes = null, betterDocs) {
+function buildNav(members, navTypes = null, betterDocs, packageVersion) {
   const href = betterDocs.landing ? 'docs.html' : 'index.html'
-  var nav = navTypes ? '' : '<h3>' + "Zippie DID " + packageVersion.version + '</h3>'
+  var nav = navTypes ? '' : '<h3>' + "Zippie DID " + packageVersion + '</h3>'
 
 
   var categorised = {}
@@ -513,6 +513,9 @@ exports.publish = function (taffyData, opts, tutorials) {
   conf = env.conf.templates || {}
   conf.default = conf.default || {}
   conf.betterDocs = conf.betterDocs || conf['better-docs'] || {}
+
+  var packageJson = readFileSync(conf.package || './package.json').toString()
+  var packageVersion = JSON.parse(packageJson).version
 
   templatePath = path.normalize(opts.template)
   view = new template.Template(path.join(templatePath, 'tmpl'))
@@ -711,9 +714,9 @@ exports.publish = function (taffyData, opts, tutorials) {
   view.outputSourceFiles = outputSourceFiles
 
   // once for all
-  view.nav = buildNav(members, null, conf.betterDocs)
+  view.nav = buildNav(members, null, conf.betterDocs, packageVersion)
 
-  view.tutorialsNav = buildNav(members, ['tutorials'], conf.betterDocs)
+  view.tutorialsNav = buildNav(members, ['tutorials'], conf.betterDocs, packageVersion)
 
   bundler(members.components, outdir, conf)
   attachModuleSymbols(find({ longname: { left: 'module:' } }), members.modules)
@@ -729,7 +732,7 @@ exports.publish = function (taffyData, opts, tutorials) {
   files = find({ kind: 'file' })
   packages = find({ kind: 'package' })
 
-  generate('', packageVersion.version,
+  generate('', packageVersion,
     packages.concat(
       [{
         kind: 'mainpage',
